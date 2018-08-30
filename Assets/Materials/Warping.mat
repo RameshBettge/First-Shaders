@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Basic
+  m_Name: Warping
   m_Shader: {fileID: 4800000, guid: 4b53bb9eb254fc74888e08a7ffb3ce33, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _HASTRANSPARENCY_ON _ISGREYSCALE_ON
   m_LightmapFlags: 4
@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amount: 0
+    - _Amount: 0.472
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1

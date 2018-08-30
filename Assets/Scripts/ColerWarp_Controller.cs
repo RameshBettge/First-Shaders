@@ -5,23 +5,38 @@ using UnityEngine;
 public class ColerWarp_Controller : MonoBehaviour
 {
 
+    [SerializeField]
+    float duration = 1f;
+
+    [Tooltip("If this is true the states will be chosen randomly.")]
+    [SerializeField]
+    bool irregular;
     Material mat;
-
-    float duration = 0.2f;
-
-    float timer;
 
     int currentState;
     int lastState;
+    int stateCount = 6;
+
+    float timer;
 
     string stateName = "state";
 
+    [SerializeField]
+    [Tooltip("Currently changeable in runtime.")]
+    [Range(0f, 1f)]
+    float amount;
 
+    void SetAmount()
+    {
+        mat.SetFloat("_Amount", amount);
+    }
 
     void Start()
     {
         lastState = 0;
         currentState = 1;
+
+
 
         mat = GetComponent<Renderer>().material;
         StartCoroutine(ChangeState());
@@ -31,6 +46,8 @@ public class ColerWarp_Controller : MonoBehaviour
     {
         while (true)
         {
+            SetAmount(); //Is only called constantly so amount can be changed in runtime.
+
             timer = 0f;
 
             while (timer < duration)
@@ -47,10 +64,25 @@ public class ColerWarp_Controller : MonoBehaviour
             mat.SetFloat(stateName + lastState.ToString(), 0f);
 
             lastState = currentState;
-            currentState++;
-            if (currentState > 2) { currentState = 0; }
+            ChooseNextState();
 
             yield return null;
+        }
+    }
+
+    void ChooseNextState()
+    {
+        if (!irregular)
+        {
+            currentState++;
+            if (currentState > stateCount - 1) { currentState = 0; }
+            return;
+        }
+
+        currentState = Random.Range(0, stateCount);
+        if (currentState == lastState)
+        {
+            ChooseNextState();
         }
     }
 }

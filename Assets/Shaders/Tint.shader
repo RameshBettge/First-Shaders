@@ -69,7 +69,6 @@
 				//Add Positional tint
 				float4 outputCol = float4(col.xyz * (1 - _PositionalTint) +  posTint * _PositionalTint, col.a);
 				//Add general _Tint and copy the a from the texture.
-				//return float4(posCol * (1 - _TintStrength) + _Tint * _TintStrength, col.a);
 				return outputCol * _Tint;
 			}
 			ENDCG

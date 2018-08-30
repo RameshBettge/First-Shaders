@@ -3,8 +3,6 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Amount ("Mix-Amount", Range(0,1)) = 0
-
 	}
 	SubShader
 	{
@@ -38,11 +36,15 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float _Amount;
+			uniform float _Amount;
 
 			uniform float state0;
 			uniform float state1;
 			uniform float state2;
+			uniform float state3;
+			uniform float state4;
+			uniform float state5;
+
 
 			
 			v2f vert (appdata v)
@@ -61,12 +63,19 @@
 				float stage = _Time.y % 3;
 
 				fixed4 firstSwitch = fixed4(col.b, col.r, col.g, col.a);
-
-				//could be used to switch between three states over time.
 				fixed4 secondSwitch = fixed4(col.g, col.b, col.r, col.a);
+				fixed4 thirdSwitch = fixed4(col.r, col.b, col.g, col.a);
+				fixed4 fourthSwitch = fixed4(col.g, col.r, col.b, col.a);
+				fixed4 fifthSwitch = fixed4(col.b, col.g, col.r, col.a);
+
+
 
 				//col = col * (1 - _Amount) + firstSwitch * _Amount;
-				col = col * state0 + firstSwitch * state1 + secondSwitch * state2;
+				fixed4 warpedCol = (col * state0 + firstSwitch * state1 + secondSwitch * state2
+				    + thirdSwitch * state3  + fourthSwitch * state4 + fifthSwitch * state5);
+
+				//col =  warpedCol * _Amount + col * (1 _Amount);
+				col =  warpedCol * _Amount + col * (1 - _Amount);
 
 				return col;
 			}
