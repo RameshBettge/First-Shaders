@@ -1,10 +1,9 @@
-﻿Shader "_MyShaders/Unlit_TwoSided"
+﻿Shader "_MyShaders/FadeToGray"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		[Toggle] _disableTransparency("disable Transparency", float) = 0
-		[Toggle] _isGrayscale("isGrayscale", float) = 0
+		_amount("Amount", Range(0, 1)) = 0
 	}
 	SubShader
 	{
@@ -38,8 +37,7 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float _disableTransparency;
-			float _isGrayscale;
+			float _amount;
 			
 			v2f vert (appdata v)
 			{
@@ -53,11 +51,7 @@
 			{
 				// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
-				col.a = max(col.a, _disableTransparency);
-				float average = (col.r + col.g + col.b) / 3;
-				fixed4 gray = fixed4(average, average, average, col.a);
-
-				col = col * (1 - _isGrayscale) + gray * _isGrayscale;
+				col.rgb = lerp(col.rgb, fixed3(0.2f, 0.2f, 0.2f), _amount);
 				return col;
 			}
 			ENDCG

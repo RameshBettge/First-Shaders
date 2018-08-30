@@ -1,10 +1,9 @@
-﻿Shader "_MyShaders/Unlit_TwoSided"
+﻿Shader "_MyShaders/SwitchColor"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		[Toggle] _disableTransparency("disable Transparency", float) = 0
-		[Toggle] _isGrayscale("isGrayscale", float) = 0
+		_Amount ("Mix-Amount", Range(0,1)) = 0
 	}
 	SubShader
 	{
@@ -38,8 +37,7 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float _disableTransparency;
-			float _isGrayscale;
+			float _Amount;
 			
 			v2f vert (appdata v)
 			{
@@ -53,11 +51,13 @@
 			{
 				// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
-				col.a = max(col.a, _disableTransparency);
-				float average = (col.r + col.g + col.b) / 3;
-				fixed4 gray = fixed4(average, average, average, col.a);
 
-				col = col * (1 - _isGrayscale) + gray * _isGrayscale;
+				fixed4 firstSwitch = fixed4(col.b, col.r, col.g, col.a);
+				fixed4 secondSwitch = fixed4(col.g, col.b, col.r, col.a);
+
+				col = col * (1 - _Amount) + firstSwitch * _Amount;
+
+
 				return col;
 			}
 			ENDCG

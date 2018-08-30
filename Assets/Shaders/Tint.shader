@@ -5,7 +5,7 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_Tint ("Tint", Color) = (1,1,1,1)
 		_PositionalTint ("Positional Tint", Range(0,1)) = 0
-		_TintStrength("Tint Strength", Range(0, 1)) = 0
+
 	}
 
 	SubShader
@@ -65,11 +65,12 @@
 			{
 				//// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
-				float3 posTint = float3(col.x, 0, col.y);
-				//Set Positional tint
-				float3 posCol = float3(col.xyz * (1 - _PositionalTint) +  posTint * _PositionalTint);
-				//Set general _Tint and copy the a from the texture.
-				return float4(posCol * (1 - _TintStrength) + _Tint * _TintStrength, col.a);
+				float3 posTint = float3(i.uv.x, 0, i.uv.y);
+				//Add Positional tint
+				float4 outputCol = float4(col.xyz * (1 - _PositionalTint) +  posTint * _PositionalTint, col.a);
+				//Add general _Tint and copy the a from the texture.
+				//return float4(posCol * (1 - _TintStrength) + _Tint * _TintStrength, col.a);
+				return outputCol * _Tint;
 			}
 			ENDCG
 		}
