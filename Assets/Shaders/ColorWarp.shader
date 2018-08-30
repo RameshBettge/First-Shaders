@@ -1,9 +1,10 @@
-﻿Shader "_MyShaders/SwitchColor"
+﻿Shader "_MyShaders/ColorWarp"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_Amount ("Mix-Amount", Range(0,1)) = 0
+
 	}
 	SubShader
 	{
@@ -38,6 +39,11 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			float _Amount;
+
+			uniform float state0;
+			uniform float state1;
+			uniform float state2;
+
 			
 			v2f vert (appdata v)
 			{
@@ -52,11 +58,15 @@
 				// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
 
+				float stage = _Time.y % 3;
+
 				fixed4 firstSwitch = fixed4(col.b, col.r, col.g, col.a);
+
+				//could be used to switch between three states over time.
 				fixed4 secondSwitch = fixed4(col.g, col.b, col.r, col.a);
 
-				col = col * (1 - _Amount) + firstSwitch * _Amount;
-
+				//col = col * (1 - _Amount) + firstSwitch * _Amount;
+				col = col * state0 + firstSwitch * state1 + secondSwitch * state2;
 
 				return col;
 			}
