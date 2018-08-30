@@ -65,10 +65,9 @@
 			{
 				//// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
-				float3 posColor = float3(i.uv.x, 0, i.uv.y);
-
+				float3 posTint = float3(col.x, 0, col.y);
 				//Set Positional tint
-				float3 posCol = float3(col.xyz * (1 - _PositionalTint) +  posColor * _PositionalTint);
+				float3 posCol = float3(col.xyz * (1 - _PositionalTint) +  posTint * _PositionalTint);
 				//Set general _Tint and copy the a from the texture.
 				return float4(posCol * (1 - _TintStrength) + _Tint * _TintStrength, col.a);
 			}

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Basic
-  m_Shader: {fileID: 4800000, guid: ba480b787a9aaec4bacc48a47ed04f0c, type: 3}
-  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_Shader: {fileID: 4800000, guid: 36189b84264f4aa4bb0a4abc8f7f1359, type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _HASTRANSPARENCY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -73,6 +73,8 @@ Material:
     - _TintStrength: 0
     - _UVSec: 0
     - _ZWrite: 1
+    - _disableTransparency: 0
+    - _hasTransparency: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
