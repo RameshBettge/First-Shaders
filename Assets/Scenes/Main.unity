@@ -444,6 +444,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.1
   irregular: 1
+  amount: 1
 --- !u!23 &926209523
 MeshRenderer:
   m_ObjectHideFlags: 0

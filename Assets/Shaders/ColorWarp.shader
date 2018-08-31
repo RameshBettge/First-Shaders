@@ -75,9 +75,9 @@
 				    + thirdSwitch * state3  + fourthSwitch * state4 + fifthSwitch * state5);
 
 				//col =  warpedCol * _Amount + col * (1 _Amount);
-				col =  warpedCol * _Amount + col * (1 - _Amount);
-
-				return col;
+				fixed4 outputCol =  warpedCol * _Amount + col * (1 - _Amount);
+				outputCol.a = col.a;
+				return outputCol;
 			}
 			ENDCG
 		}
