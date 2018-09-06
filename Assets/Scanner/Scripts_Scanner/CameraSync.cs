@@ -14,20 +14,15 @@ public class CameraSync : MonoBehaviour
 
     void Start()
     {
-        offset -= transform.position;
+        //offset -= transform.position;
     }
 
     void LateUpdate()
     {
-        float h = Input.GetAxis("Horizontal");
-        if (h != 0f)
-        {
-            transform.Rotate(Vector3.up * h);
-        }
-        else
-        {
-            transform.Rotate(-Vector3.right * Input.GetAxis("Vertical"));
-        }
+            //transform.Rotate(Vector3.up * Input.GetAxisRaw("Horizontal"));
+            transform.eulerAngles += Vector3.up * Input.GetAxisRaw("Horizontal");
+            //transform.Rotate(-Vector3.right * Input.GetAxisRaw("Vertical"));
+            transform.eulerAngles += -Vector3.right * Input.GetAxisRaw("Vertical");
 
         secondCam.position = transform.position + offset;
         secondCam.rotation = transform.rotation;
