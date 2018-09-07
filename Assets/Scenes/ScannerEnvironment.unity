@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45138252, g: 0.5009165, b: 0.5725551, a: 1}
+  m_IndirectSpecularColor: {r: 0.45138192, g: 0.50091606, b: 0.5725546, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -168,6 +168,12 @@ MonoBehaviour:
     RimCol: {r: 1, g: 0, b: 0, a: 1}
     RimStrength: 1
     RimPow: 0.85
+  output:
+    DiffuseCol: {r: 1, g: 1, b: 1, a: 1}
+    DifDetailCol: {r: 1, g: 1, b: 1, a: 1}
+    RimCol: {r: 1, g: 1, b: 1, a: 1}
+    RimStrength: 0
+    RimPow: 0
 --- !u!135 &206160170
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1283,17 +1289,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultSetting:
-    DiffuseCol: {r: 0, g: 0.2264151, b: 0.007875317, a: 1}
-    DifDetailCol: {r: 1, g: 0.14576927, b: 0, a: 1}
-    RimCol: {r: 1, g: 0.043137252, b: 0.9120001, a: 1}
+    DiffuseCol: {r: 0, g: 0.14150941, b: 0.0048796292, a: 1}
+    DifDetailCol: {r: 1, g: 1, b: 1, a: 1}
+    RimCol: {r: 0, g: 0.5471698, b: 0.040058043, a: 1}
     RimStrength: 1
     RimPow: 0.85
   activatedSetting:
-    DiffuseCol: {r: 1, g: 0, b: 0, a: 1}
-    DifDetailCol: {r: 1, g: 0, b: 0, a: 1}
-    RimCol: {r: 1, g: 0, b: 0, a: 1}
-    RimStrength: 1
-    RimPow: 0.85
+    DiffuseCol: {r: 0.9811321, g: 0.6237008, b: 0, a: 1}
+    DifDetailCol: {r: 0.96203995, g: 0, b: 1, a: 1}
+    RimCol: {r: 0.87299854, g: 0.4764151, b: 1, a: 1}
+    RimStrength: 2.47
+    RimPow: 0.52
+  output:
+    DiffuseCol: {r: 1, g: 1, b: 1, a: 1}
+    DifDetailCol: {r: 1, g: 1, b: 1, a: 1}
+    RimCol: {r: 1, g: 1, b: 1, a: 1}
+    RimStrength: 0
+    RimPow: 0
 --- !u!1001 &1028368287
 Prefab:
   m_ObjectHideFlags: 0

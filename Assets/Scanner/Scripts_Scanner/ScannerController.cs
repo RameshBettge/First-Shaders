@@ -15,8 +15,8 @@ public class ScannerController : MonoBehaviour
 
     WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
-    float changeTime = 5f;
-    float maxScan = 0.3f;
+    float changeTime = 3f;
+    float maxScan = 0.25f;
 
 
     void Start()
