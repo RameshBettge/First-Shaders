@@ -9,27 +9,59 @@ public class ScannerController : MonoBehaviour
     [SerializeField]
     ScannerSetting activatedSetting;
 
-    ScannerSetting currentSetting;
+    public ScannerSetting output = new ScannerSetting();
 
     Material mat;
+
+    WaitForEndOfFrame wait = new WaitForEndOfFrame();
+
+    float changeTime = 5f;
+    float maxScan = 0.3f;
 
 
     void Start()
     {
         mat = GetComponent<Renderer>().material;
-        currentSetting = defaultSetting;
+        output.Reset();
+        defaultSetting.Blend(output, 1);
         mat.SetFloat("_ScannerStrength", 0f);
-        currentSetting.Apply(mat);
+        output.Apply(mat);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            currentSetting = activatedSetting;
-            currentSetting.Apply(mat);
-            mat.SetFloat("_ScannerStrength", 0.25f);
+            //activeSetting = activatedSetting;
+            //activeSetting.Apply(mat);
+            //mat.SetFloat("_ScannerStrength", 0.25f);
+            StartCoroutine(ActivateScanner());
         }
+    }
+
+    IEnumerator ActivateScanner()
+    {
+        print("Activating scanner...");
+        float timer = 0f;
+        float percentage = 0f;
+
+        while (percentage < 1f)
+        {
+            timer += Time.deltaTime;
+
+            output.Reset();
+            defaultSetting.Blend(output, 1 - percentage);
+            activatedSetting.Blend(output, percentage);
+
+            output.Apply(mat);
+
+            mat.SetFloat("_ScannerStrength", maxScan * percentage);
+
+            percentage = timer / changeTime;
+            yield return wait;
+        }
+        print("Scanner activated");
+
     }
 }
 
@@ -54,13 +86,13 @@ public class ScannerSetting
         RimPow = 0f;
     }
 
-    public void Blend(ScannerSetting controller, float percentage)
+    public void Blend(ScannerSetting output, float percentage)
     {
-        controller.DiffuseCol += DiffuseCol;
-        controller.DifDetailCol += DifDetailCol;
-        controller.RimCol += RimCol;
-        controller.RimStrength += RimStrength;
-        controller.RimPow += RimPow;
+        output.DiffuseCol += DiffuseCol * percentage;
+        output.DifDetailCol += DifDetailCol * percentage;
+        output.RimCol += RimCol * percentage;
+        output.RimStrength += RimStrength * percentage;
+        output.RimPow += RimPow * percentage;
     }
 
     public void Apply(Material m)
@@ -87,6 +119,6 @@ public class ScannerSetting
         floats[2] = c.b;
         floats[3] = c.a;
     }
-    
+
 }
 
