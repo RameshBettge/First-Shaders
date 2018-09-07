@@ -7,11 +7,17 @@ Shader "_MyShaders/ControlledScanner"
 		[Header(Diffuse)]
 		_MainTex("Main Texture", 2D) = "White" {}
 		_DetailTex("Detail Texture", 2D) = "White" {}
+		_DifDetailCol("Detail Color", Color) = (1, 1, 1, 1)
 
 		[Header(Specular)]
 		_SpecCol ("Color", Color) = (1, 1, 1, 1)
 		_SpecStrength ("Strength", Range(0, 2)) = 0.2
 		_SpecPow("Power", Range(1, 40)) = 3
+
+		[Header(Rim)]
+		_RimCol("Color", Color) = (1, 1, 1, 1)
+		_RimStrength("Strength", Range(0, 1)) = 0.3
+		_RimPow("Power", Range(0.01, 1.5)) = 1
 	}
 	SubShader
 	{
@@ -48,22 +54,24 @@ Shader "_MyShaders/ControlledScanner"
 				float3 lightDir : TEXCOORD2;
 			};
 
-			float _ScannerStrength;
+			uniform float _ScannerStrength;
 
 			sampler2D _MainTex;
 			fixed4 _MainTex_ST;
-			uniform fixed4 _DiffuseCol;
+			float DiffuseArray[4];
 			sampler2D _DetailTex;
+			//float 
 			fixed4 _DetailTex_ST;
-			uniform fixed4 _DifDetailCol;
+			float difDetailCol[4];
 
-			uniform fixed4 _SpecCol;
-			uniform float _SpecStrength;
-			uniform float _SpecPow;
+			fixed4 _SpecCol;
+			float _SpecStrength;
+			float _SpecPow;
 			
-			uniform fixed4 _RimCol;
-			uniform float _RimStrength;
-			uniform float _RimPow;
+			fixed4 _RimCol;
+			float rimCol[4];
+			float _RimStrength;
+			float _RimPow;
 
 			v2f vert (appdata v)
 			{
@@ -84,7 +92,8 @@ Shader "_MyShaders/ControlledScanner"
 			//Diffuse
 				fixed NdotL = dot(i.normal, i.lightDir) * 0.5 + 1;
 				//NdotL = max(1 - _ScannerStrength, NdotL);
-				fixed4 dif = tex2D(_MainTex, i.uv) * _DiffuseCol * NdotL;
+				fixed4 difTint = fixed4(DiffuseArray[0], DiffuseArray[1], DiffuseArray[2], 0);
+				fixed4 dif = tex2D(_MainTex, i.uv) * difTint * NdotL;
 				dif.a = 1 - _ScannerStrength;
 
 			//Specular
@@ -105,10 +114,12 @@ Shader "_MyShaders/ControlledScanner"
 			//Add lighting types together
 				fixed4 col = lerp(dif, invis, _ScannerStrength);
 				fixed4 output = lerp(col, spec, RdotV);
-				output = lerp(output, _RimCol, rim);
+				fixed4 rCol = fixed4(rimCol[0], rimCol[1], rimCol[2], rimCol[3]);
+				output = lerp(output, rCol, rim);
 				output.a = max(output.a, rim);
 
-				output = lerp(output, _DifDetailCol, 1 - tex2D(_DetailTex, i.uv).r);
+				fixed4 dDC = fixed4(difDetailCol[0], difDetailCol[1], difDetailCol[2], difDetailCol[3]);
+				output = lerp(output, dDC, 1 - tex2D(_DetailTex, i.uv).r);
 
 				return output;
 			}

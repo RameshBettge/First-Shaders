@@ -4,36 +4,89 @@ using UnityEngine;
 
 public class ScannerController : MonoBehaviour
 {
+    [SerializeField]
+    ScannerSetting defaultSetting;
+    [SerializeField]
+    ScannerSetting activatedSetting;
+
+    ScannerSetting currentSetting;
+
     Material mat;
 
-  //  _ScannerStrength("PortalStrength", Range(0, 0.4)) = 0.2 
-
-
-		//_DiffuseCol("Main Color", Color) = (1, 1, 1, 1)
-
-		//_DifDetailCol("Detail Color", Color) = (1, 1, 1, 1)
-
-		//[Header(Rim)]
-  //  _RimCol("Color", Color) = (1, 1, 1, 1)
-		//_RimStrength("Strength", Range(0, 1)) = 0.3
-		//_RimPow("Power", Range(0.01, 1.5)) = 1
 
     void Start()
     {
-
+        mat = GetComponent<Renderer>().material;
+        currentSetting = defaultSetting;
+        mat.SetFloat("_ScannerStrength", 0f);
+        currentSetting.Apply(mat);
     }
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            currentSetting = activatedSetting;
+            currentSetting.Apply(mat);
+            mat.SetFloat("_ScannerStrength", 0.25f);
+        }
     }
 }
 
-public struct ScannerSetting
+[System.Serializable]
+public class ScannerSetting
 {
-    public Vector4 DiffuseCol;
-    public Vector4 DifDetailCol;
-    public Vector4 RimCol;
-    public float RinStrength;
+    public Color DiffuseCol = Color.white;
+    public Color DifDetailCol = Color.white;
+    public Color RimCol = Color.white;
+    public float RimStrength;
     public float RimPow;
+
+    float[] floats = new float[4];
+
+    public void Reset()
+    {
+
+        DiffuseCol = Vector4.zero;
+        DifDetailCol = Vector4.zero;
+        RimCol = Vector4.zero;
+        RimStrength = 0f;
+        RimPow = 0f;
+    }
+
+    public void Blend(ScannerSetting controller, float percentage)
+    {
+        controller.DiffuseCol += DiffuseCol;
+        controller.DifDetailCol += DifDetailCol;
+        controller.RimCol += RimCol;
+        controller.RimStrength += RimStrength;
+        controller.RimPow += RimPow;
+    }
+
+    public void Apply(Material m)
+    {
+        SetFloats(DiffuseCol);
+        //m.SetFloatArray("_DiffuseCol", floats);
+        m.SetFloatArray("DiffuseArray", floats);
+
+        SetFloats(DifDetailCol);
+        m.SetFloatArray("difDetailCol", floats);
+
+        SetFloats(RimCol);
+        m.SetFloatArray("rimCol", floats);
+
+        m.SetFloat("_RimStrength", RimStrength);
+        m.SetFloat("_RimPow", RimPow);
+
+    }
+
+    void SetFloats(Color c)
+    {
+        floats[0] = c.r;
+        floats[1] = c.g;
+        floats[2] = c.b;
+        floats[3] = c.a;
+    }
+    
 }
+
