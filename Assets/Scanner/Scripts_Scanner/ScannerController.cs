@@ -9,6 +9,12 @@ public class ScannerController : MonoBehaviour
     [SerializeField]
     ScannerSetting activatedSetting;
 
+    [SerializeField]
+    AnimationCurve pulse;
+
+    [SerializeField]
+    float activeDuration = 10f;
+
     public ScannerSetting output = new ScannerSetting();
 
     Material mat;
@@ -16,8 +22,10 @@ public class ScannerController : MonoBehaviour
     WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
     float changeTime = 3f;
-    float maxScan = 0.25f;
+    float maxScan = 0.5f;
 
+    enum Activation { Activating, Activated, Deactivated };
+    Activation state;
 
     void Start()
     {
@@ -26,22 +34,22 @@ public class ScannerController : MonoBehaviour
         defaultSetting.Blend(output, 1);
         mat.SetFloat("_ScannerStrength", 0f);
         output.Apply(mat);
+
+        state = Activation.Deactivated;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && state == Activation.Deactivated)
         {
-            //activeSetting = activatedSetting;
-            //activeSetting.Apply(mat);
-            //mat.SetFloat("_ScannerStrength", 0.25f);
             StartCoroutine(ActivateScanner());
         }
     }
 
     IEnumerator ActivateScanner()
     {
-        print("Activating scanner...");
+        state = Activation.Activating;
+
         float timer = 0f;
         float percentage = 0f;
 
@@ -60,8 +68,35 @@ public class ScannerController : MonoBehaviour
             percentage = timer / changeTime;
             yield return wait;
         }
-        print("Scanner activated");
 
+        StartCoroutine(StayActive());
+    }
+
+    IEnumerator StayActive()
+    {
+        state = Activation.Activated;
+
+        float timer = 0f;
+        float percentage = 0f;
+
+        while (percentage < 1f)
+        {
+            timer += Time.deltaTime;
+
+            float pulsePercentage = pulse.Evaluate(percentage);
+
+            output.Reset();
+            defaultSetting.Blend(output, 1 - pulsePercentage);
+            activatedSetting.Blend(output, pulsePercentage);
+
+            output.Apply(mat);
+
+            mat.SetFloat("_ScannerStrength", maxScan * pulsePercentage);
+
+            percentage = timer / activeDuration;
+            yield return wait;
+        }
+        state = Activation.Deactivated;
     }
 }
 
